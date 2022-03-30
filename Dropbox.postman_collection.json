@@ -1,0 +1,155 @@
+{
+	"info": {
+		"_postman_id": "653c5ef3-b671-419e-b097-c81563159f16",
+		"name": "Dropbox",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Upload file",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer AgGZQ4QvkHsAAAAAAAAAAUElilkJdjDb_Q71yuGcIQX5IJNh76YIxtgEh8uObZ6e"
+					},
+					{
+						"key": "Dropbox-API-Arg",
+						"value": "{\"path\": \"/test.txt\",\"mode\": \"add\",\"autorename\": true,\"mute\": false,\"strict_conflict\": false}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/octet-stream"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "@test.txt"
+				},
+				"url": {
+					"raw": "https://content.dropboxapi.com/2/files/upload",
+					"protocol": "https",
+					"host": [
+						"content",
+						"dropboxapi",
+						"com"
+					],
+					"path": [
+						"2",
+						"files",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create folder",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "AgGZQ4QvkHsAAAAAAAAAAUElilkJdjDb_Q71yuGcIQX5IJNh76YIxtgEh8uObZ6e",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"path\": \"/test\",\n    \"autorename\": false\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.dropboxapi.com/2/files/create_folder_v2",
+					"protocol": "https",
+					"host": [
+						"api",
+						"dropboxapi",
+						"com"
+					],
+					"path": [
+						"2",
+						"files",
+						"create_folder_v2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get files id",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer AgGZQ4QvkHsAAAAAAAAAAUElilkJdjDb_Q71yuGcIQX5IJNh76YIxtgEh8uObZ6e"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"path\": \"\",\n    \"recursive\": false,\n    \"include_media_info\": false,\n    \"include_deleted\": false,\n    \"include_has_explicit_shared_members\": false,\n    \"include_mounted_folders\": true,\n    \"include_non_downloadable_files\": true\n}"
+				},
+				"url": {
+					"raw": "https://api.dropboxapi.com/2/files/list_folder",
+					"protocol": "https",
+					"host": [
+						"api",
+						"dropboxapi",
+						"com"
+					],
+					"path": [
+						"2",
+						"files",
+						"list_folder"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get file content",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer AgGZQ4QvkHsAAAAAAAAAAUElilkJdjDb_Q71yuGcIQX5IJNh76YIxtgEh8uObZ6e"
+					},
+					{
+						"key": "Dropbox-API-Arg",
+						"value": "{\"path\": \"/3ADF8381-338C-40E1-B04C-ACD7DA41EFC1.json\"}"
+					}
+				],
+				"url": {
+					"raw": "https://content.dropboxapi.com/2/files/download",
+					"protocol": "https",
+					"host": [
+						"content",
+						"dropboxapi",
+						"com"
+					],
+					"path": [
+						"2",
+						"files",
+						"download"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
