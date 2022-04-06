@@ -57,14 +57,12 @@ class FirstSheet:
             strand = learningObjectives["strand"]
             short_goal = learningObjectives["goal_Short"]
             core = learningObjectives["isCore"]
-            objective = learningObjectives["description"]
             evalScore = learningObjectives["eval_score"]
             evalDate = learningObjectives["eval_date"]
 
             # creating empty data if nil
             if ID not in data:
                 data[ID] = {}
-                data[ID]["objective"] = objective
                 data[ID]["strand"] = strand
                 data[ID]["short_goal"] = short_goal
                 data[ID]["core"] = core

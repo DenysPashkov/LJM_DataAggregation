@@ -27,14 +27,12 @@ class SecondSheet:
             strand = learningObjectives["strand"]
             short_goal = learningObjectives["goal_Short"]
             core = learningObjectives["isCore"]
-            objective = learningObjectives["description"]
             evalScore = learningObjectives["eval_score"]
             evalDate = learningObjectives["eval_date"]
 
             # creating empty data if nil
             if ID not in data: 
                 data[ID] = {}
-                data[ID]["objective"] = objective
                 data[ID]["strand"] = strand
                 data[ID]["short_goal"] = short_goal
                 data[ID]["core"] = core
@@ -130,7 +128,7 @@ class SecondSheet:
             experienceLevels = ["No Exposure","Beginning","Progressing","Proficient","Exemplary"]
 
             # the first row is a litte bit particular
-            firstRow = ["ID","Objective","Strand","Short Goal","Core", "Level"]
+            firstRow = ["ID","Strand","Short Goal","Core", "Level"]
             level_Datas = [*data[list(data.keys())[0]]["level1"]]
             level_Datas.sort()
             for level_Data in level_Datas:
@@ -148,8 +146,6 @@ class SecondSheet:
                     row = []
                     # insert the ID
                     row.append(key)
-                    # input the objective
-                    row.append(data[key]["objective"])
                     # input the strand
                     row.append(data[key]["strand"])
                     # insert the goal
