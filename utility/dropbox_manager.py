@@ -1,11 +1,11 @@
 import requests, json
 from datetime import datetime
 
-TOKEN = 'keyvSDG29X6BEJH0B'
+TOKEN = 'keyatGjTlu9gc4VpK'
 
 def _getData(offset : str):
 
-    url = "https://api.airtable.com/v0/appMpsQ2dMvlknrmM/Table%201/"
+    url = "https://api.airtable.com/v0/applg11alQPTDJYOV/LJM/"
 
     headers = {
         'Authorization': 'Bearer ' + TOKEN,
