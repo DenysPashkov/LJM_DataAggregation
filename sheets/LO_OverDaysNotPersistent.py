@@ -1,6 +1,7 @@
 import sys, json, csv
 from datetime import datetime
 import utility.timestamp_utility as stamp
+import sheets.LO_OverDaysPersistent as s3
 
 class SecondSheet:
 
@@ -20,12 +21,16 @@ class SecondSheet:
 
     def generateData(self) -> str:
         data = {}
+        allLOs = s3.readLearningObjectiveCSV(self)
+        
         for learningObjectives in self.students_data:
             
             # getting data from each learning objectives
             ID = learningObjectives["ID"]
             strand = learningObjectives["strand"]
             short_goal = learningObjectives["goal_Short"]
+            goal = next(LO for LO in allLOs if LO['ID'] == ID)['goal']
+            objectives = next(LO for LO in allLOs if LO['ID'] == ID)['objectives']
             core = learningObjectives["isCore"]
             evalScore = learningObjectives["eval_score"]
             evalDate = learningObjectives["eval_date"]
@@ -34,7 +39,9 @@ class SecondSheet:
             if ID not in data: 
                 data[ID] = {}
                 data[ID]["strand"] = strand
+                data[ID]["goal"] = goal
                 data[ID]["short_goal"] = short_goal
+                data[ID]["objectives"] = objectives
                 data[ID]["core"] = core
                 data[ID]["level1"] = {}
                 data[ID]["level2"] = {}
@@ -76,6 +83,29 @@ class SecondSheet:
                         a = "level" + str(j)
                         if evalDateTimestamp not in data[ID][a]:
                             data[ID][a][evalDateTimestamp] = 0
+         
+        for LO in allLOs:
+            if LO['ID'] not in data.keys():
+                data[LO['ID']] = {}
+                data[LO['ID']]["strand"] = LO['strand']
+                data[LO['ID']]["goal"] = LO['goal']
+                data[LO['ID']]["short_goal"] = LO['short']
+                data[LO['ID']]["objectives"] = LO['objectives']
+                data[LO['ID']]["core"] = "CORE" if LO['core'] else "ELECTIVE"
+
+                data[LO['ID']]["level1"] = {}
+                data[LO['ID']]["level2"] = {}
+                data[LO['ID']]["level3"] = {}
+                data[LO['ID']]["level4"] = {}
+                data[LO['ID']]["level5"] = {}
+
+            data[LO['ID']]["backend"] = LO['backend']
+            data[LO['ID']]["business"] = LO['business']
+            data[LO['ID']]["design"] = LO['design']
+            data[LO['ID']]["frontend"] = LO['frontend']
+            data[LO['ID']]["gameDesign"] = LO['gameDesign']
+            data[LO['ID']]["gameDeveloper"] = LO['gameDeveloper']
+            data[LO['ID']]["projectManagement"] = LO['projectManagement']
 
         data_string = json.dumps(self.addEmptyDate(data))
         # with open("output/test.json", 'w') as f:
@@ -97,13 +127,13 @@ class SecondSheet:
 
         # calculate dates extremes
         minTimestamp = float("inf")
-        maxTimestamp = float("-inf")
+        now = datetime.now()
+        timestamp = datetime.timestamp(now)
+        maxTimestamp = float(timestamp)
         for ID in data:
             for date in data[ID]["level1"].keys():
                 if float(date) < minTimestamp:
                     minTimestamp = float(date)
-                elif float(date) > maxTimestamp:
-                    maxTimestamp = float(date)
 
         # saving 0 for each timestamp
         timestamp = minTimestamp
@@ -128,16 +158,17 @@ class SecondSheet:
             experienceLevels = ["No Exposure","Beginning","Progressing","Proficient","Exemplary"]
 
             # the first row is a litte bit particular
-            firstRow = ["ID","Strand","Short Goal","Core", "Level"]
+            #backend;business;design;frontend;gameDesign;gameDeveloper;projectManagement
+            firstRow = ["ID","Strand","goal","Short Goal","objectives","Core","Level","backend","business","design","frontend","gameDesign","gameDeveloper","projectManagement"]
             level_Datas = [*data[list(data.keys())[0]]["level1"]]
             level_Datas.sort()
             for level_Data in level_Datas:
-                date_time = datetime.fromtimestamp(int(level_Data)).strftime("%Y-%m-%d")
+                date_time = datetime.fromtimestamp(int(level_Data)).strftime('%Y-%b-%d').upper()
                 firstRow.append(date_time)
 
             # appending the first row
             allRows.append(firstRow)
-
+            #["ID","Strand","goal","Short Goal","objectives","Core","Level"]
             # for each learning objective that we have in the json
             for key in data.keys():
                 # fo this operation 5 time, each for an evaluation level
@@ -148,12 +179,44 @@ class SecondSheet:
                     row.append(key)
                     # input the strand
                     row.append(data[key]["strand"])
+                    # input the goal
+                    row.append(data[key]["goal"])
                     # insert the goal
                     row.append(data[key]["short_goal"])
+                    # input the goal
+                    row.append(data[key]["objectives"])
                     #insert the core
                     row.append(data[key]["core"])
                     # insert the level of expertice
                     row.append(key + " - " + experienceLevels[i-1])
+                    rubrics = ["backend","business","design","frontend","gameDesign","gameDeveloper","projectManagement"]
+
+                    for rubric in rubrics:
+                        present = 0
+                        if data[key][rubric] in experienceLevels:
+                            present = experienceLevels.index(data[key][rubric])
+                            row.append("1" if present == (i-1) else "0")
+                        else:
+                            row.append("0")
+
+
+                    # insert the rubric level expected for Backend path
+                    rubricAssociated = "0"
+                    if data[key]["backend"] in experienceLevels:
+                        backendPath = experienceLevels.index(data[key]["backend"])
+                    row.append("1" if data[key]["backend"]!= "" else "0")
+                    # insert the rubric level expected for Business path
+                    row.append("1" if data[key]["business"]!= "" else "0")
+                    # insert the rubric level expected for Design path
+                    row.append("1" if data[key]["design"]!= "" else "0")
+                    # insert the rubric level expected for Frontend path
+                    row.append("1" if data[key]["frontend"]!= "" else "0")
+                    # insert the rubric level expected for Game Design path
+                    row.append("1" if data[key]["gameDesign"]!= "" else "0")
+                    # insert the rubric level expected for Game Developer path
+                    row.append("1" if data[key]["gameDeveloper"]!= "" else "0")
+                    # insert the rubric level expected for Project Management path
+                    row.append("1" if data[key]["projectManagement"]!= "" else "0")
 
                     # check how many student are present for that day
                     level_Datas = [*data[key]["level"+str(i)]]
@@ -171,7 +234,7 @@ class SecondSheet:
                     tsv_writer.writerow(singleRow)
             
                 out_file.close()
-
+            print("@@@@@@@")
             return True
 
         except Exception as e: 

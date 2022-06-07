@@ -1,11 +1,12 @@
+import sys, json, csv
 import requests, json
 from datetime import datetime
 
-TOKEN = 'keyatGjTlu9gc4VpK'
+TOKEN = 'keyN55muBclzvZXAb'
 
 def _getData(offset : str):
 
-    url = "https://api.airtable.com/v0/applg11alQPTDJYOV/LJM/"
+    url = "https://api.airtable.com/v0/app26CHrOG4n8za36/LJM"
 
     headers = {
         'Authorization': 'Bearer ' + TOKEN,
@@ -82,4 +83,9 @@ def getStudentsContent():
         json_object = json.loads(peppe)
         dataArray+=json_object
         
-    return dataArray
+    #sys.stdout.write(f"@@@@@@ {dataArray[0]['fields']['data']}" )
+    #sys.stdout.write(f"@@@@@@ {filteredStudents[0]['fields']}" )
+
+    return dataArray, filteredStudents;
+
+getStudentsContent()

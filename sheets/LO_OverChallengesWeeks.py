@@ -136,7 +136,6 @@ class FirstSheet:
             
             # defining support arrays
             allRows = []
-            experienceLevels = ["No Exposure","Beginning","Progressing","Proficient","Exemplary"]
 
             # the first row is a litte bit particular
             firstRow = ["","","","",""]
@@ -313,11 +312,12 @@ class FirstSheet:
                     for week in data[list(data.keys())[0]]["challenges"][challenge].keys():
                         numMed = forChallenges[strand][challenge][week]["medNum"]
                         allSumNum = forChallenges[strand][challenge][week]["allSumNum"]
+                        sum = forChallenges[strand][challenge][week]["sum"]
                         if numMed == 0:
                             numMed = 1
                         if allSumNum == 0:
                             allSumNum = 1
-                        toAppend = ["",forChallenges[strand][challenge][week]["sum"],int(forChallenges[strand][challenge][week]["med"]/numMed),int(forChallenges[strand][challenge][week]["allSum"]/allSumNum)]
+                        toAppend = ["",sum,int(forChallenges[strand][challenge][week]["med"]/numMed),int(forChallenges[strand][challenge][week]["allSum"]/allSumNum)]
                         firstRow += toAppend
                 # appending the row
                 allRows.append(firstRow)
