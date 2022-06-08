@@ -1,5 +1,5 @@
 - Learning Journey Manager
 - This is the Data Agregation and manipulation repository of the data taken from the students
-- Data Agregation
-- Data Agregation and manipulation
+- Data Aggregation
+- Data Aggregation and manipulation
 - https://www.notion.so/appledeveloperacademyunina/Data-Collection-Tool-Documentation-7ee4ed1f485940eb892ae68711b4f152
